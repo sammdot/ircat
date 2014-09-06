@@ -30,5 +30,10 @@ def listen(sock, callback):
 		elif cmd == "001":
 			callback()
 
+def cat(sock, chan, data):
+	send(sock, "JOIN #{0}".format(chan))
+	for line in data.splitlines():
+		send(sock, "PRIVMSG #{0} :{1}".format(chan, line))
+
 def main():
 	pass
