@@ -3,6 +3,9 @@
 import socket
 import sys
 
+def error(err):
+	sys.stderr.write(err + "\n")
+
 def connect(host, port):
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	sock.settimeout(1800)
@@ -10,7 +13,7 @@ def connect(host, port):
 		sock.connect((host, port))
 		return sock
 	except socket.error as e:
-		sys.stderr.write(e + "\n")
+		error(e)
 
 def send(sock, msg):
 	sock.sendall(bytes(msg + "\r\n", "UTF-8"))
@@ -19,7 +22,6 @@ def listen(sock, callback):
 	f = sock.makefile("rb")
 	while True:
 		msg = f.readline().decode("utf-8", errors="ignore").rstrip("\r\n")
-		print(msg)
 		parts = msg.split(" ")
 		parts = parts[1:] if parts[0].startswith(":") else parts
 		cmd = parts[0]
@@ -36,4 +38,11 @@ def cat(sock, chan, data):
 		send(sock, "PRIVMSG #{0} :{1}".format(chan, line))
 
 def main():
-	pass
+	if len(sys.argv) < 4 or len(sys.argv) > 5:
+		error("Not enough arguments")
+		error("Usage: ircat <host> <port> <channel> [nick]")
+	host, port, channel, *rest = sys.argv[1:]
+	nick = rest[0] if len(rest) else "IRCat"
+
+if __name__ == "__main__":
+	main()
