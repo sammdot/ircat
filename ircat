@@ -36,6 +36,7 @@ def cat(sock, chan, data):
 	send(sock, "JOIN #{0}".format(chan))
 	for line in data.splitlines():
 		send(sock, "PRIVMSG #{0} :{1}".format(chan, line))
+	send(sock, "QUIT :bye")
 
 def main():
 	if len(sys.argv) < 4 or len(sys.argv) > 5:
@@ -43,6 +44,18 @@ def main():
 		error("Usage: ircat <host> <port> <channel> [nick]")
 	host, port, channel, *rest = sys.argv[1:]
 	nick = rest[0] if len(rest) else "IRCat"
+
+	try:
+		port = int(port)
+	except ValueError:
+		error("Invalid port number: " + port)
+		exit(1)
+
+	if channel.startswith("#"):
+		channel = channel[1:]
+
+	sock = connect((host, port))
+	listen(sock, lambda: cat(sock, channel, sys.stdin.read())
 
 if __name__ == "__main__":
 	main()
