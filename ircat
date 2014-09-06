@@ -54,7 +54,7 @@ def main():
 	if channel.startswith("#"):
 		channel = channel[1:]
 
-	sock = connect((host, port))
+	sock = connect(host, port)
 	listen(sock, lambda: cat(sock, channel, sys.stdin.read()))
 
 if __name__ == "__main__":
