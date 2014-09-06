@@ -42,6 +42,7 @@ def main():
 	if len(sys.argv) < 4 or len(sys.argv) > 5:
 		error("Not enough arguments")
 		error("Usage: ircat <host> <port> <channel> [nick]")
+		exit(1)
 	host, port, channel, *rest = sys.argv[1:]
 	nick = rest[0] if len(rest) else "IRCat"
 
