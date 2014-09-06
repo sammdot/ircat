@@ -55,7 +55,7 @@ def main():
 		channel = channel[1:]
 
 	sock = connect((host, port))
-	listen(sock, lambda: cat(sock, channel, sys.stdin.read())
+	listen(sock, lambda: cat(sock, channel, sys.stdin.read()))
 
 if __name__ == "__main__":
 	main()
